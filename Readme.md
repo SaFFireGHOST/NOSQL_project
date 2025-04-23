@@ -72,39 +72,26 @@ This project consists of Python scripts to load student course grades from a CSV
 ---
 
 ### 4. `main_v4.py`
-
-**Purpose:** Queries, updates, and synchronizes student course grades across MongoDB, MySQL, and Hive.
-
-**Supported Databases:**
-
-- **MongoDB:** `university_db.student_course_grades` collection with keys `student-ID`, `course-id`, `roll no`, `email ID`, `grade`.
-- **MySQL:** `university_db.student_course_grades` table with columns `student_id`, `course_id`, `roll_no`, `email_id`, `grade`.
-- **Hive:** `default.student_course_grades` table with the same schema as MySQL.
-
-**Operations:**
-
-- **GET:** Retrieve a record by `student_id` and `course_id`.
-- **SET:** Update the `grade` for a given `student_id` and `course_id`.
-- **MERGE:** Synchronize local database state with a remote database’s state using operation logs.
-
-**Operation Logs:**
-
-- Files: `mongo_operations.log`, `mysql_operations.log`, `hive_operations.log`.
-- Format:
-  - `GET: YYYY-MM-DD HH:MM:SS - GET (student_id, course_id)`
-  - `SET: YYYY-MM-DD HH:MM:SS - SET ((student_id, course_id), grade)`
-- `MERGE` reads SET operations from the remote log and applies them locally.
-
-**Merge Logic:**
-
-- `merge_logs` extracts latest remote SETs, ignores local log updates.
-- `merge_mongo`, `merge_mysql`, `merge_hive` apply updates.
-
-**Error Handling:** Manages missing logs, invalid inputs, and connection errors.
-
-**Debugging:** Outputs count of SET operations found and merged.
-
-**Dependencies:** `pandas`, `pymongo`, `mysql-connector-python`, `pyhive`, `thrift`, `python-dateutil`
+- **Purpose**: Queries, updates, and synchronizes student course grades across MongoDB, MySQL, and Hive.
+- **Features**:
+  - **Database Support**:
+    - **MongoDB**: NoSQL database (`university_db.student_course_grades` collection) with keys `student-ID`, `course-id`, `roll no`, `email ID`, `grade`.
+    - **MySQL**: Relational database (`university_db.student_course_grades` table) with columns `student_id`, `course_id`, `roll_no`, `email_id`, `grade`.
+    - **Hive**: Data warehouse (`default.student_course_grades` table) with the same schema as MySQL.
+  - **Operations**:
+    - **GET**: Retrieves a record for a given `student_id` and `course_id`.
+    - **SET**: Updates the `grade` for a given `student_id` and `course_id`.
+    - **MERGE**: Synchronizes the local database with a remote database's state using operation logs.
+  - **Operation Logs**:
+    - Files: `mongo_operations.log`, `mysql_operations.log`, `hive_operations.log`.
+    - Format: `GET`: `YYYY-MM-DD HH:MM:SS - GET (student_id, course_id)`; `SET`: `YYYY-MM-DD HH:MM:SS - SET ((student_id, course_id), grade)`.
+    - Used by `MERGE` to apply remote `SET` operations to the local database.
+  - **Merge Logic**:
+    - The `merge_logs` function extracts the latest `SET` operations from the remote log, ignoring local log updates.
+    - System-specific functions (`merge_mongo`, `merge_mysql`, `merge_hive`) apply these updates.
+  - **Error Handling**: Manages missing logs, invalid inputs, and database connection errors.
+  - **Debugging**: Outputs the number of `SET` operations found and merged during `MERGE`.
+- **Dependencies**: `pandas`, `pymongo`, `mysql-connector-python`, `pyhive`, `thrift`, `python-dateutil`.
 
 ---
 
@@ -186,16 +173,8 @@ SID1033,CSE016,CRPC2ZW9,crpc2zw9@university.edu,A
 SID1310,CSE020,XYZ12345,xyz12345@university.edu,B
 ```
 
-### Step 4: Prepare Log Files
 
-```bash
-touch /home/koushik/Desktop/NOSQL_project/*.log
-chmod 644 /home/koushik/Desktop/NOSQL_project/*.log
-```
-
-*Creates **`mongo_operations.log`**, **`mysql_operations.log`**, **`hive_operations.log`**.*
-
-### Step 5: Run the Scripts
+### Step 4: Run the Scripts
 
 **Load Data:**
 
