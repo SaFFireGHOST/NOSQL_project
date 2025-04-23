@@ -299,10 +299,7 @@ Debug: Found 2 SET operations in remote log
 
 ## Troubleshooting
 
-- **No updates to merge:** Verify `hive_operations.log` contains SET entries:
-  ```bash
-  cat hive_operations.log
-  ```
+
 - **Connection errors:** Ensure MongoDB, MySQL, Hive services are running and ports/credentials are correct.
 - **Log format issues:** Ensure logs match the regex: `YYYY-MM-DD HH:MM:SS - (GET|SET) ...`.
 - **CSV issues:** Confirm correct headers and file path.
@@ -313,5 +310,5 @@ Debug: Found 2 SET operations in remote log
 
 - **Performance:** Hive loads and MERGE using `INSERT OVERWRITE` can be slow for large datasets. Consider using partitioning or ORC/Parquet formats in production.
 - **Log Format:** Must exactly match `YYYY-MM-DD HH:MM:SS - SET ((student_id, course_id), grade)`. Provide sample logs if parsing errors occur.
-- **Directory Structure:** Assumes all scripts, CSV, and log files reside in `/home/koushik/Desktop/NOSQL_project/`.
+
 
